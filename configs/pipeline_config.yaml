@@ -1,0 +1,107 @@
+# ==============================================================================
+# Enterprise E-Commerce & Clickstream Lakehouse Configuration
+# ==============================================================================
+
+environment: "local"
+
+# Storage & Catalog Path Layouts
+paths:
+  local:
+    raw_data:
+      orders_cdc: "data/raw/orders_cdc"
+      customers_cdc: "data/raw/customers_cdc"
+      clickstream: "data/raw/clickstream"
+      products: "data/raw/products"
+    bronze: "data/lakehouse/bronze"
+    silver: "data/lakehouse/silver"
+    gold: "data/lakehouse/gold"
+    checkpoints: "data/lakehouse/checkpoints"
+  databricks:
+    raw_data:
+      orders_cdc: "/mnt/datalake/raw/orders_cdc"
+      customers_cdc: "/mnt/datalake/raw/customers_cdc"
+      clickstream: "/mnt/datalake/raw/clickstream"
+      products: "/mnt/datalake/raw/products"
+    bronze: "/mnt/datalake/bronze"
+    silver: "/mnt/datalake/silver"
+    gold: "/mnt/datalake/gold"
+    checkpoints: "/mnt/datalake/checkpoints"
+
+# Spark & Distributed Compute Optimization Parameters
+spark_engine:
+  app_name: "EcommerceClickstreamLakehouseEngine"
+  # Tuned for local/small clusters; dynamically overridden in DAB production runs
+  shuffle_partitions: 8
+  adaptive_query_execution:
+    enabled: true
+    coalesce_partitions_enabled: true
+    skew_join_enabled: true
+    skew_join_skewed_partition_factor: 5
+    skew_join_skewed_partition_threshold_in_bytes: 67108864 # 64MB
+  delta:
+    auto_compact_enabled: true
+    optimize_write_enabled: true
+    schema_auto_merge: false # strict schema enforcement by default
+
+# Medallion Architecture Configurations
+medallion:
+  bronze:
+    metadata_columns:
+      ingest_timestamp: "_ingest_timestamp"
+      source_file: "_source_file"
+      rescued_data: "_rescued_data"
+    table_properties:
+      "delta.appendOnly": "true"
+      "delta.autoOptimize.optimizeWrite": "true"
+
+  silver:
+    orders:
+      primary_key: "order_id"
+      sequence_col: "_change_seq"
+      timestamp_col: "event_timestamp"
+      op_col: "op_type"
+      valid_statuses:
+        - "PENDING"
+        - "CONFIRMED"
+        - "SHIPPED"
+        - "DELIVERED"
+        - "CANCELLED"
+        - "RETURNED"
+      partition_by: ["order_date"]
+      zorder_by: ["customer_id", "order_status"]
+    customers:
+      primary_key: "customer_id"
+      sequence_col: "_change_seq"
+      timestamp_col: "event_timestamp"
+      op_col: "op_type"
+      zorder_by: ["customer_id", "country"]
+    clickstream:
+      primary_key: "event_id"
+      timestamp_col: "event_timestamp"
+      partition_by: ["event_date"]
+      zorder_by: ["user_id", "session_id"]
+    products:
+      primary_key: "product_id"
+
+  gold:
+    broadcast_dimensions:
+      - "dim_products"
+      - "dim_customers"
+    marts:
+      daily_customer_ltv:
+        table_name: "gold_daily_customer_ltv"
+        partition_by: ["report_date"]
+        zorder_by: ["customer_id", "customer_segment"]
+      category_sales_velocity:
+        table_name: "gold_category_sales_velocity"
+        partition_by: ["order_date"]
+        zorder_by: ["category_id"]
+      retention_funnel:
+        table_name: "gold_retention_funnel"
+        partition_by: ["event_date"]
+        zorder_by: ["device_type", "traffic_source"]
+
+# Skew Mitigation Defaults
+skew_mitigation:
+  default_num_salts: 8
+  hot_key_threshold: 10000

@@ -1,0 +1,30 @@
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.poetry]
+name = "ecommerce-clickstream-lakehouse"
+version = "1.0.0"
+description = "Enterprise E-Commerce & Clickstream Lakehouse Engine using PySpark, Delta Lake, and Medallion Architecture"
+authors = ["Lakehouse Engineering Team <data-eng@example.com>"]
+readme = "README.md"
+packages = [{include = "src"}]
+
+[tool.poetry.dependencies]
+python = ">=3.10,<3.12"
+pyspark = ">=3.5.0,<3.6.0"
+delta-spark = ">=3.2.0,<3.3.0"
+pyyaml = ">=6.0"
+
+[tool.poetry.group.dev.dependencies]
+pytest = ">=8.0.0"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "-ra -q -v"
+testpaths = ["tests"]
+pythonpath = ["."]
+filterwarnings = [
+    "ignore::DeprecationWarning",
+    "ignore::UserWarning"
+]
