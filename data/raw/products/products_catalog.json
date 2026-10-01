@@ -1,0 +1,20 @@
+{"product_id": "PROD-0001", "product_name": "Summit Item 1", "category_id": "CAT-ELC", "category_name": "Electronics", "unit_price": 86.72, "brand": "Summit", "_rescued_data": null}
+{"product_id": "PROD-0002", "product_name": "Zenith Item 2", "category_id": "CAT-APP", "category_name": "Apparel & Fashion", "unit_price": 134.46, "brand": "Apex", "_rescued_data": null}
+{"product_id": "PROD-0003", "product_name": "Nova Item 3", "category_id": "CAT-HME", "category_name": "Home & Kitchen", "unit_price": 350.49, "brand": "Lumina", "_rescued_data": null}
+{"product_id": "PROD-0004", "product_name": "Apex Item 4", "category_id": "CAT-BKS", "category_name": "Books & Media", "unit_price": 92.74, "brand": "Summit", "_rescued_data": null}
+{"product_id": "PROD-0005", "product_name": "Nova Item 5", "category_id": "CAT-SPT", "category_name": "Sports & Outdoors", "unit_price": 415.01, "brand": "Apex", "_rescued_data": null}
+{"product_id": "PROD-0006", "product_name": "Summit Item 6", "category_id": "CAT-ELC", "category_name": "Electronics", "unit_price": 40.78, "brand": "Apex", "_rescued_data": null}
+{"product_id": "PROD-0007", "product_name": "Zenith Item 7", "category_id": "CAT-APP", "category_name": "Apparel & Fashion", "unit_price": 61.49, "brand": "Summit", "_rescued_data": null}
+{"product_id": "PROD-0008", "product_name": "Vanguard Item 8", "category_id": "CAT-HME", "category_name": "Home & Kitchen", "unit_price": 442.59, "brand": "Lumina", "_rescued_data": null}
+{"product_id": "PROD-0009", "product_name": "Vanguard Item 9", "category_id": "CAT-BKS", "category_name": "Books & Media", "unit_price": 248.15, "brand": "Summit", "_rescued_data": null}
+{"product_id": "PROD-0010", "product_name": "Nova Item 10", "category_id": "CAT-SPT", "category_name": "Sports & Outdoors", "unit_price": 395.87, "brand": "Lumina", "_rescued_data": null}
+{"product_id": "PROD-0011", "product_name": "Lumina Item 11", "category_id": "CAT-ELC", "category_name": "Electronics", "unit_price": 26.9, "brand": "Lumina", "_rescued_data": null}
+{"product_id": "PROD-0012", "product_name": "Zenith Item 12", "category_id": "CAT-APP", "category_name": "Apparel & Fashion", "unit_price": 264.32, "brand": "Nova", "_rescued_data": null}
+{"product_id": "PROD-0013", "product_name": "Zenith Item 13", "category_id": "CAT-HME", "category_name": "Home & Kitchen", "unit_price": 25.98, "brand": "Apex", "_rescued_data": null}
+{"product_id": "PROD-0014", "product_name": "Summit Item 14", "category_id": "CAT-BKS", "category_name": "Books & Media", "unit_price": 61.44, "brand": "Nova", "_rescued_data": null}
+{"product_id": "PROD-0015", "product_name": "Apex Item 15", "category_id": "CAT-SPT", "category_name": "Sports & Outdoors", "unit_price": 116.54, "brand": "Nova", "_rescued_data": null}
+{"product_id": "PROD-0016", "product_name": "Summit Item 16", "category_id": "CAT-ELC", "category_name": "Electronics", "unit_price": 257.05, "brand": "Vanguard", "_rescued_data": null}
+{"product_id": "PROD-0017", "product_name": "Vanguard Item 17", "category_id": "CAT-APP", "category_name": "Apparel & Fashion", "unit_price": 159.25, "brand": "Summit", "_rescued_data": null}
+{"product_id": "PROD-0018", "product_name": "Lumina Item 18", "category_id": "CAT-HME", "category_name": "Home & Kitchen", "unit_price": 305.31, "brand": "Nova", "_rescued_data": null}
+{"product_id": "PROD-0019", "product_name": "Apex Item 19", "category_id": "CAT-BKS", "category_name": "Books & Media", "unit_price": 22.7, "brand": "Nova", "_rescued_data": null}
+{"product_id": "PROD-0020", "product_name": "Nova Item 20", "category_id": "CAT-SPT", "category_name": "Sports & Outdoors", "unit_price": 388.22, "brand": "Summit", "_rescued_data": null}
