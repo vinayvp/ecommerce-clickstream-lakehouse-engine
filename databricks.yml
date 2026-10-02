@@ -1,0 +1,90 @@
+# ==============================================================================
+# Databricks Asset Bundle (DAB) Specification
+# Enterprise E-Commerce & Clickstream Lakehouse Engine
+# ==============================================================================
+
+bundle:
+  name: ecommerce_clickstream_lakehouse
+
+include:
+  - configs/*.yaml
+
+targets:
+  dev:
+    mode: development
+    default: true
+    workspace:
+      root_path: /Workspace/Users/${workspace.current_user.userName}/.bundle/${bundle.name}/${bundle.target}
+
+  prod:
+    mode: production
+    workspace:
+      root_path: /Shared/.bundle/${bundle.name}/${bundle.target}
+    run_as:
+      service_principal_name: lakehouse-prod-sp
+
+resources:
+  jobs:
+    medallion_pipeline_workflow:
+      name: "[${bundle.target}] Ecommerce Medallion Lakehouse Engine"
+      description: "Hourly orchestration of Bronze raw ingestion, Silver CDC MERGE upserts, and Gold analytical marts."
+      
+      schedule:
+        quartz_cron_expression: "0 0 * * * ?"
+        timezone_id: "UTC"
+        pause_status: "UNPAUSED"
+
+      job_clusters:
+        - job_cluster_key: lakehouse_optimized_cluster
+          new_cluster:
+            spark_version: "14.3.x-scala2.12"
+            node_type_id: "Standard_D4s_v5"
+            autoscale:
+              min_workers: 2
+              max_workers: 8
+            spark_conf:
+              spark.sql.adaptive.enabled: "true"
+              spark.sql.adaptive.coalescePartitions.enabled: "true"
+              spark.sql.adaptive.skewJoin.enabled: "true"
+              spark.sql.shuffle.partitions: "auto"
+              spark.databricks.delta.optimizeWrite.enabled: "true"
+              spark.databricks.delta.autoCompact.enabled: "true"
+              spark.databricks.delta.schema.autoMerge.enabled: "false"
+
+      tasks:
+        # Task 1: Bronze Ingestion
+        - task_key: bronze_ingest_raw
+          job_cluster_key: lakehouse_optimized_cluster
+          spark_python_task:
+            python_file: "src/bronze/ingest_raw.py"
+            parameters:
+              - "--config"
+              - "configs/pipeline_config.yaml"
+          libraries:
+            - whl: dist/*.whl
+
+        # Task 2: Silver Cleansing, Deduplication & CDC MERGE
+        - task_key: silver_transform_cdc
+          depends_on:
+            - task_key: bronze_ingest_raw
+          job_cluster_key: lakehouse_optimized_cluster
+          spark_python_task:
+            python_file: "src/silver/transform_silver.py"
+            parameters:
+              - "--config"
+              - "configs/pipeline_config.yaml"
+          libraries:
+            - whl: dist/*.whl
+
+        # Task 3: Gold Dimensional Marts & Z-ORDER
+        - task_key: gold_build_marts
+          depends_on:
+            - task_key: silver_transform_cdc
+          job_cluster_key: lakehouse_optimized_cluster
+          spark_python_task:
+            python_file: "src/gold/build_gold_marts.py"
+            parameters:
+              - "--config"
+              - "configs/pipeline_config.yaml"
+          libraries:
+            - whl: dist/*.whl
